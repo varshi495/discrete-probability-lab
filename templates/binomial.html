@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Binomial Distribution · Discrete Probability Lab{% endblock %}
+{% block content %}
+<div class="page-title">
+  <p class="eyebrow">MODULE 01</p>
+  <h1>Binomial Distribution</h1>
+  <p>Explore the number of successes in <em>n</em> independent trials, each with success probability <em>p</em>.</p>
+  <div class="formula-banner">X ~ Binomial(n, p) <span>PMF: P(X = k) = C(n,k) p<sup>k</sup>(1-p)<sup>n-k</sup></span></div>
+</div>
+
+<div class="workspace">
+  <section class="panel input-panel">
+    <div class="panel-heading"><div><p class="eyebrow">PARAMETERS</p><h2>Distribution inputs</h2></div></div>
+    <div class="field">
+      <label for="n">Number of trials <span>n</span></label>
+      <input id="n" type="number" min="1" step="1" value="20">
+      <small>Enter a positive whole number.</small>
+    </div>
+    <div class="field">
+      <label for="p">Probability of success <span>p</span></label>
+      <input id="p" type="number" min="0" max="1" step="0.01" value="0.35">
+      <small>Choose a value from 0 to 1, inclusive.</small>
+    </div>
+    <div class="field">
+      <label for="k">Number of successes <span>k</span></label>
+      <input id="k" type="number" min="0" max="20" step="1" value="7">
+      <small id="k-help">Must be a whole number between 0 and n.</small>
+    </div>
+    <div id="error" class="error" role="alert" hidden></div>
+    <div class="selected-values">Current distribution <strong id="selected">n = 20, p = 0.35</strong></div>
+  </section>
+
+  <section class="results">
+    <div class="panel">
+      <div class="panel-heading"><div><p class="eyebrow">SUMMARY</p><h2>Statistical measures</h2></div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>Mean</span><strong id="mean">7.0000</strong><small>np</small></article>
+        <article class="stat-card"><span>Variance</span><strong id="variance">4.5500</strong><small>np(1-p)</small></article>
+        <article class="stat-card"><span>Standard deviation</span><strong id="sd">2.1331</strong><small>√Variance</small></article>
+        <article class="stat-card"><span>Second moment E[X²]</span><strong id="second">53.5500</strong><small>Variance + Mean²</small></article>
+        <article class="stat-card"><span>Skewness</span><strong id="skewness">0.1406</strong><small>Distribution asymmetry</small></article>
+      </div>
+    </div>
+    <div class="two-panels">
+      <section class="panel probability-panel">
+        <p class="eyebrow">POINT PROBABILITY</p><h2>PMF result</h2>
+        <p class="muted">Probability of exactly <span id="pmf-k-label">7</span> successes.</p>
+        <strong class="big-result" id="pmf">0.1839</strong>
+        <div class="result-equation">P(X = k) = <span id="pmf-expression">P(X = 7)</span></div>
+      </section>
+      <section class="panel probability-panel">
+        <p class="eyebrow">CUMULATIVE PROBABILITY</p><h2>CDF result</h2>
+        <p class="muted">Probability of k or fewer successes.</p>
+        <div class="cdf-row"><span>P(X ≤ k)</span><strong id="cdf">0.6080</strong></div>
+        <div class="cdf-row"><span>P(X &gt; k)</span><strong id="complement">0.3920</strong></div>
+        <p class="explanation">P(X ≤ k) means the probability of getting k or fewer successes.</p>
+      </section>
+    </div>
+  </section>
+</div>
+
+<section class="panel chart-panel">
+  <div class="chart-heading"><div><p class="eyebrow">VISUALIZATION</p><h2>Probability mass function (PMF)</h2><p class="muted">Hover over a bar to see its probability. The dashed line marks the mean.</p></div></div>
+  <div class="chart-wrap"><canvas id="pmfChart" aria-label="Binomial probability mass function bar chart"></canvas></div>
+</section>
+<script src="{{ url_for('static', filename='js/binomial.js') }}"></script>
+{% endblock %}

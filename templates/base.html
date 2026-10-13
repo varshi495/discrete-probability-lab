@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Discrete Probability Distributions{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="{{ url_for('home') }}"><span class="brand-mark">∑</span><span>Discrete Probability <small>AIML Laboratory</small></span></a>
+    <nav aria-label="Main navigation">
+      <a class="{% if request.endpoint == 'home' %}active{% endif %}" href="{{ url_for('home') }}">Home</a>
+      <a class="{% if request.endpoint == 'binomial' %}active{% endif %}" href="{{ url_for('binomial') }}">Binomial</a>
+      <a class="{% if request.endpoint == 'poisson' %}active{% endif %}" href="{{ url_for('poisson') }}">Poisson</a>
+      <a class="{% if request.endpoint == 'geometric' %}active{% endif %}" href="{{ url_for('geometric') }}">Geometric</a>
+    </nav>
+  </header>
+  <main class="page">
+    {% block content %}{% endblock %}
+  </main>
+  <footer>Discrete Probability Distributions · Undergraduate AIML Laboratory</footer>
+</body>
+</html>
