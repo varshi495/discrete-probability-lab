@@ -21,5 +21,7 @@
     {% block content %}{% endblock %}
   </main>
   <footer>Discrete Probability Distributions · Undergraduate AIML Laboratory</footer>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/pdf-export.js') }}"></script>
 </body>
 </html>

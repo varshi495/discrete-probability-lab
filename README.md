@@ -38,6 +38,7 @@ A simple Flask web application for an undergraduate AIML laboratory, with intera
 - Mean, variance, standard deviation, second moment, and skewness
 - PMF and CDF calculators for Binomial, Poisson, and Geometric distributions
 - Small probabilities use scientific notation, and near-one CDFs retain their small complementary tail in the display
+- Download distribution results and PMF charts as named PDFs (`binomial.pdf`, `poisson.pdf`, or `geometric.pdf`)
 - Dynamic PMF bar charts with probability tooltips and a dashed mean reference line
 - Input validation and edge-case handling
 
