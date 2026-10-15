@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Geometric Distribution · Discrete Probability Lab{% endblock %}
+{% block content %}
+<div class="page-title">
+  <p class="eyebrow">MODULE 03</p>
+  <h1>Geometric Distribution</h1>
+  <p>Explore the number of independent trials needed to get the first success, when each trial has success probability <em>p</em>.</p>
+  <div class="formula-banner">X ~ Geometric(p) <span>PMF: P(X = k) = (1-p)<sup>k-1</sup>p, k = 1, 2, …</span></div>
+</div>
+
+<div class="workspace">
+  <section class="panel input-panel">
+    <div class="panel-heading"><div><p class="eyebrow">PARAMETERS</p><h2>Distribution inputs</h2></div></div>
+    <div class="field">
+      <label for="p">Probability of success <span>p</span></label>
+      <input id="p" type="number" min="0" max="1" step="any" value="0.35">
+      <small>Choose a probability greater than 0 and at most 1.</small>
+    </div>
+    <div class="field">
+      <label for="k">Trial of first success <span>k</span></label>
+      <input id="k" type="number" min="1" step="1" value="3">
+      <small id="k-help">Enter a positive whole number. X counts trials starting at 1.</small>
+    </div>
+    <div id="error" class="error" role="alert" hidden></div>
+    <div class="selected-values">Current distribution <strong id="selected">p = 0.35</strong></div>
+  </section>
+
+  <section class="results">
+    <div class="panel">
+      <div class="panel-heading"><div><p class="eyebrow">SUMMARY</p><h2>Statistical measures</h2></div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>Mean</span><strong id="mean">2.8571</strong><small>1/p</small></article>
+        <article class="stat-card"><span>Variance</span><strong id="variance">5.3061</strong><small>(1-p)/p²</small></article>
+        <article class="stat-card"><span>Standard deviation</span><strong id="sd">2.3035</strong><small>√Variance</small></article>
+        <article class="stat-card"><span>Second moment E[X²]</span><strong id="second">13.4694</strong><small>(2-p)/p²</small></article>
+        <article class="stat-card"><span>Skewness</span><strong id="skewness">2.0466</strong><small>(2-p)/√(1-p)</small></article>
+      </div>
+    </div>
+    <div class="two-panels">
+      <section class="panel probability-panel">
+        <p class="eyebrow">POINT PROBABILITY</p><h2>PMF result</h2>
+        <p class="muted">Probability that the first success occurs on trial <span id="pmf-k-label">3</span>.</p>
+        <strong class="big-result" id="pmf">0.1479</strong>
+        <div class="result-equation">P(X = k) = <span id="pmf-expression">P(X = 3)</span></div>
+      </section>
+      <section class="panel probability-panel">
+        <p class="eyebrow">CUMULATIVE PROBABILITY</p><h2>CDF result</h2>
+        <p class="muted">Probability of a first success by trial k.</p>
+        <div class="cdf-row"><span>P(X ≤ k)</span><strong id="cdf">0.7254</strong></div>
+        <div class="cdf-row"><span>P(X &gt; k)</span><strong id="complement">0.2746</strong></div>
+        <p class="explanation">P(X ≤ k) means the first success occurs on or before trial k.</p>
+      </section>
+    </div>
+  </section>
+</div>
+
+<section class="panel chart-panel">
+  <div class="chart-heading"><div><p class="eyebrow">VISUALIZATION</p><h2>Probability mass function (PMF)</h2><p class="muted">The chart shows the first trials, truncating once the remaining probability is below 1e-6 (up to 1,000 trials). Hover over a bar for its probability.</p></div></div>
+  <div class="chart-wrap"><canvas id="pmfChart" aria-label="Geometric probability mass function bar chart"></canvas></div>
+</section>
+<script src="{{ url_for('static', filename='js/geometric.js') }}"></script>
+{% endblock %}

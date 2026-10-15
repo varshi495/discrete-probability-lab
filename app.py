@@ -11,6 +11,11 @@ from distributions.poisson import (
     poisson_pmf,
     poisson_cdf_and_complement,
 )
+from distributions.geometric import (
+    geometric_stats,
+    geometric_pmf,
+    geometric_cdf_and_complement,
+)
 
 app = Flask(__name__)
 
@@ -28,7 +33,7 @@ def poisson():
 
 @app.get("/geometric")
 def geometric():
-    return render_template("placeholder.html", distribution="Geometric")
+    return render_template("geometric.html")
 
 @app.post("/api/binomial")
 def api_binomial():
@@ -100,6 +105,40 @@ def api_poisson():
             "chart": [
                 {"x": x, "probability": poisson_pmf(rate, x)}
                 for x in range(chart_max + 1)
+            ],
+        })
+    except (TypeError, ValueError, OverflowError) as exc:
+        return jsonify({"error": str(exc) or "Please enter valid values."}), 400
+
+
+@app.post("/api/geometric")
+def api_geometric():
+    data = request.get_json(silent=True) or {}
+    try:
+        p = float(data.get("p", 0.35))
+        if not math.isfinite(p) or not 0 < p <= 1:
+            raise ValueError("Probability p must be greater than 0 and at most 1.")
+
+        k_float = float(data.get("k", 3))
+        if not k_float.is_integer() or k_float < 0:
+            raise ValueError("Trial count k must be a non-negative integer.")
+        k = int(k_float)
+
+        stats = geometric_stats(p)
+        cdf, complement = geometric_cdf_and_complement(p, k)
+        chart_max = 1 if p == 1 else min(
+            1000, max(1, math.ceil(math.log(1e-6) / math.log1p(-p)))
+        )
+        return jsonify({
+            "p": p,
+            "k": k,
+            "stats": stats,
+            "pmf": geometric_pmf(p, k),
+            "cdf": cdf,
+            "complement": complement,
+            "chart": [
+                {"x": x, "probability": geometric_pmf(p, x)}
+                for x in range(1, chart_max + 1)
             ],
         })
     except (TypeError, ValueError, OverflowError) as exc:
