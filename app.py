@@ -1,5 +1,8 @@
+import math
+
 from flask import Flask, render_template, request, jsonify
 from distributions.binomial import binomial_stats, binomial_pmf, binomial_cdf
+from distributions.poisson import poisson_stats, poisson_pmf, poisson_cdf
 
 app = Flask(__name__)
 
@@ -13,7 +16,7 @@ def binomial():
 
 @app.get("/poisson")
 def poisson():
-    return render_template("placeholder.html", distribution="Poisson")
+    return render_template("poisson.html")
 
 @app.get("/geometric")
 def geometric():
@@ -59,6 +62,37 @@ def api_binomial():
         })
     except (TypeError, ValueError, OverflowError) as exc:
         return jsonify({"error": str(exc) or "Please enter valid values."}), 400
+
+
+@app.post("/api/poisson")
+def api_poisson():
+    data = request.get_json(silent=True) or {}
+    try:
+        rate = float(data.get("lambda", 4))
+        if not math.isfinite(rate) or not 0 <= rate <= 1000:
+            raise ValueError("Rate λ must be between 0 and 1000, inclusive.")
+
+        k_float = float(data.get("k", 4))
+        if not k_float.is_integer() or k_float < 0:
+            raise ValueError("Event count k must be a non-negative integer.")
+        k = int(k_float)
+
+        stats = poisson_stats(rate)
+        chart_max = math.ceil(rate + 6 * stats["standard_deviation"] + 10)
+        return jsonify({
+            "lambda": rate,
+            "k": k,
+            "stats": stats,
+            "pmf": poisson_pmf(rate, k),
+            "cdf": poisson_cdf(rate, k),
+            "chart": [
+                {"x": x, "probability": poisson_pmf(rate, x)}
+                for x in range(chart_max + 1)
+            ],
+        })
+    except (TypeError, ValueError, OverflowError) as exc:
+        return jsonify({"error": str(exc) or "Please enter valid values."}), 400
+
 
 if __name__ == "__main__":
     app.run(debug=True)

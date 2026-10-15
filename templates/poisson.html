@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Poisson Distribution · Discrete Probability Lab{% endblock %}
+{% block content %}
+<div class="page-title">
+  <p class="eyebrow">MODULE 02</p>
+  <h1>Poisson Distribution</h1>
+  <p>Explore the number of events occurring in a fixed interval at an average rate of <em>λ</em>.</p>
+  <div class="formula-banner">X ~ Poisson(λ) <span>PMF: P(X = k) = e<sup>−λ</sup> λ<sup>k</sup> / k!</span></div>
+</div>
+
+<div class="workspace">
+  <section class="panel input-panel">
+    <div class="panel-heading"><div><p class="eyebrow">PARAMETERS</p><h2>Distribution inputs</h2></div></div>
+    <div class="field">
+      <label for="lambda">Average event rate <span>λ</span></label>
+      <input id="lambda" type="number" min="0" max="1000" step="0.1" value="4">
+      <small>Choose an average rate from 0 to 1000, inclusive.</small>
+    </div>
+    <div class="field">
+      <label for="k">Number of events <span>k</span></label>
+      <input id="k" type="number" min="0" step="1" value="4">
+      <small>Enter a non-negative whole number.</small>
+    </div>
+    <div id="error" class="error" role="alert" hidden></div>
+    <div class="selected-values">Current distribution <strong id="selected">λ = 4</strong></div>
+  </section>
+
+  <section class="results">
+    <div class="panel">
+      <div class="panel-heading"><div><p class="eyebrow">SUMMARY</p><h2>Statistical measures</h2></div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><span>Mean</span><strong id="mean">4.0000</strong><small>λ</small></article>
+        <article class="stat-card"><span>Variance</span><strong id="variance">4.0000</strong><small>λ</small></article>
+        <article class="stat-card"><span>Standard deviation</span><strong id="sd">2.0000</strong><small>√λ</small></article>
+        <article class="stat-card"><span>Second moment E[X²]</span><strong id="second">20.0000</strong><small>λ + λ²</small></article>
+        <article class="stat-card"><span>Skewness</span><strong id="skewness">0.5000</strong><small>1 / √λ</small></article>
+      </div>
+    </div>
+    <div class="two-panels">
+      <section class="panel probability-panel">
+        <p class="eyebrow">POINT PROBABILITY</p><h2>PMF result</h2>
+        <p class="muted">Probability of exactly <span id="pmf-k-label">4</span> events.</p>
+        <strong class="big-result" id="pmf">0.1954</strong>
+        <div class="result-equation">P(X = k) = <span id="pmf-expression">P(X = 4)</span></div>
+      </section>
+      <section class="panel probability-panel">
+        <p class="eyebrow">CUMULATIVE PROBABILITY</p><h2>CDF result</h2>
+        <p class="muted">Probability of k or fewer events.</p>
+        <div class="cdf-row"><span>P(X ≤ k)</span><strong id="cdf">0.6288</strong></div>
+        <div class="cdf-row"><span>P(X &gt; k)</span><strong id="complement">0.3712</strong></div>
+        <p class="explanation">P(X ≤ k) means the probability of getting k or fewer events.</p>
+      </section>
+    </div>
+  </section>
+</div>
+
+<section class="panel chart-panel">
+  <div class="chart-heading"><div><p class="eyebrow">VISUALIZATION</p><h2>Probability mass function (PMF)</h2><p class="muted">Hover over a bar to see its probability. The dashed line marks the mean.</p></div></div>
+  <div class="chart-wrap"><canvas id="pmfChart" aria-label="Poisson probability mass function bar chart"></canvas></div>
+</section>
+<script src="{{ url_for('static', filename='js/poisson.js') }}"></script>
+{% endblock %}

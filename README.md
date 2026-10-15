@@ -1,6 +1,6 @@
 # Discrete Probability Distributions Lab
 
-A simple Flask web application for an undergraduate AIML laboratory. The Binomial module is functional; Poisson and Geometric pages are placeholders for future development.
+A simple Flask web application for an undergraduate AIML laboratory. The Binomial and Poisson modules are functional; the Geometric page is a placeholder for future development.
 
 ## Requirements
 - Python 3.10 or newer
@@ -33,12 +33,14 @@ A simple Flask web application for an undergraduate AIML laboratory. The Binomia
 ## Included
 - Home page and navigation for Home, Binomial, Poisson, and Geometric
 - Binomial inputs (n and p), with defaults 20 and 0.35
+- Poisson inputs (rate λ and event count k), with defaults 4 and 4
 - Mean, variance, standard deviation, second moment, and skewness
-- PMF and CDF calculators
-- Dynamic PMF bar chart with probability tooltips and a dashed mean reference line
+- PMF and CDF calculators for Binomial and Poisson distributions
+- Dynamic PMF bar charts with probability tooltips and a dashed mean reference line
 - Input validation and edge-case handling
 
 ## Notes
 - No database is required.
 - For `p = 0` or `p = 1`, the variance is zero and skewness is displayed as not defined.
-- Poisson and Geometric modules are placeholders in this version.
+- Poisson rate values are limited to 0 through 1000 so the distribution chart remains practical to render.
+- The Geometric module is a placeholder in this version.
