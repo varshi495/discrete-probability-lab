@@ -50,7 +50,7 @@ A simple Flask web application for an undergraduate AIML laboratory, with intera
 - Geometric trials count from 1; its success probability must be greater than 0 and at most 1.
 - The Geometric chart shows at most 1,000 trials and aims to include all but 1e-6 of the distribution's probability mass.
 
-## 
+
 
 ## OUTPUT RESULT
  In this experiment I understood how Binomial Poisson and Geometric distributions work and how they show up in real situations. Using the defect numbers I figured out the mean variance and standard deviation along with the chances for different results. t. It seems like comparing those theoretical numbers to what really happened made the differences stand out more than I expected.
@@ -70,3 +70,6 @@ I ran the  tests: 23 passed. I also checked the PDF export in the browser; it pr
 
 ![alt text](image.png)
 ![alt text](image-1.png)
+
+![alt text](image-2.png)
+![alt text](image-3.png)
