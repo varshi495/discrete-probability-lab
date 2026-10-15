@@ -36,6 +36,7 @@ A simple Flask web application for an undergraduate AIML laboratory. The Binomia
 - Poisson inputs (rate λ and event count k), with defaults 4 and 4
 - Mean, variance, standard deviation, second moment, and skewness
 - PMF and CDF calculators for Binomial and Poisson distributions
+- Small probabilities use scientific notation, and near-one CDFs retain their small complementary tail in the display
 - Dynamic PMF bar charts with probability tooltips and a dashed mean reference line
 - Input validation and edge-case handling
 

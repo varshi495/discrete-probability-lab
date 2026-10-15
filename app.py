@@ -1,8 +1,16 @@
 import math
 
 from flask import Flask, render_template, request, jsonify
-from distributions.binomial import binomial_stats, binomial_pmf, binomial_cdf
-from distributions.poisson import poisson_stats, poisson_pmf, poisson_cdf
+from distributions.binomial import (
+    binomial_stats,
+    binomial_pmf,
+    binomial_cdf_and_complement,
+)
+from distributions.poisson import (
+    poisson_stats,
+    poisson_pmf,
+    poisson_cdf_and_complement,
+)
 
 app = Flask(__name__)
 
@@ -48,13 +56,15 @@ def api_binomial():
             raise ValueError("k must be between 0 and n, inclusive.")
 
         stats = binomial_stats(n, p)
+        cdf, complement = binomial_cdf_and_complement(n, p, k)
         return jsonify({
             "n": n,
             "p": p,
             "k": k,
             "stats": stats,
             "pmf": binomial_pmf(n, p, k),
-            "cdf": binomial_cdf(n, p, k),
+            "cdf": cdf,
+            "complement": complement,
             "chart": [
                 {"x": x, "probability": binomial_pmf(n, p, x)}
                 for x in range(n + 1)
@@ -78,13 +88,15 @@ def api_poisson():
         k = int(k_float)
 
         stats = poisson_stats(rate)
+        cdf, complement = poisson_cdf_and_complement(rate, k)
         chart_max = math.ceil(rate + 6 * stats["standard_deviation"] + 10)
         return jsonify({
             "lambda": rate,
             "k": k,
             "stats": stats,
             "pmf": poisson_pmf(rate, k),
-            "cdf": poisson_cdf(rate, k),
+            "cdf": cdf,
+            "complement": complement,
             "chart": [
                 {"x": x, "probability": poisson_pmf(rate, x)}
                 for x in range(chart_max + 1)

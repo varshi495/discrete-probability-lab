@@ -9,6 +9,16 @@
     if (value === null || !Number.isFinite(value)) return "Not defined";
     return value.toFixed(digits);
   };
+  const fmtProbability = value => {
+    if (!Number.isFinite(value)) return "Not defined";
+    return value > 0 && value < 1e-6 ? value.toExponential(1) : value.toFixed(8);
+  };
+  const fmtCdf = (value, complement) => {
+    if (complement > 0 && Number(value.toFixed(8)) === 1) {
+      return `1 - ${fmtProbability(complement)}`;
+    }
+    return fmtProbability(value);
+  };
 
   // Draw a dashed vertical line at the mean without requiring an extra plugin.
   const meanLinePlugin = {
@@ -65,10 +75,10 @@
       document.getElementById("second").textContent = fmt(data.stats.second_moment, 4);
       document.getElementById("skewness").textContent = fmt(data.stats.skewness, 4);
       document.getElementById("pmf-k-label").textContent = data.k;
-      document.getElementById("pmf").textContent = fmt(data.pmf, 8);
+      document.getElementById("pmf").textContent = fmtProbability(data.pmf);
       document.getElementById("pmf-expression").textContent = `P(X = ${data.k})`;
-      document.getElementById("cdf").textContent = fmt(data.cdf, 8);
-      document.getElementById("complement").textContent = fmt(1 - data.cdf, 8);
+      document.getElementById("cdf").textContent = fmtCdf(data.cdf, data.complement);
+      document.getElementById("complement").textContent = fmtProbability(data.complement);
 
       const labels = data.chart.map(point => point.x);
       const probabilities = data.chart.map(point => point.probability);
@@ -102,7 +112,7 @@
               tooltip: {
                 callbacks: {
                   title: items => `X = ${items[0].label}`,
-                  label: item => `P(X = ${item.label}) = ${Number(item.raw).toFixed(8)}`
+                  label: item => `P(X = ${item.label}) = ${fmtProbability(Number(item.raw))}`
                 }
               }
             },

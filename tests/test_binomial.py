@@ -1,5 +1,12 @@
 import unittest
-from distributions.binomial import binomial_pmf, binomial_cdf, binomial_stats
+
+from app import app
+from distributions.binomial import (
+    binomial_pmf,
+    binomial_cdf,
+    binomial_cdf_and_complement,
+    binomial_stats,
+)
 
 
 class BinomialTests(unittest.TestCase):
@@ -15,6 +22,22 @@ class BinomialTests(unittest.TestCase):
     def test_cdf_bounds(self):
         self.assertAlmostEqual(binomial_cdf(10, 0.4, 10), 1.0)
         self.assertAlmostEqual(binomial_cdf(10, 0.4, -1), 0.0)
+
+    def test_tiny_pmf_remains_nonzero(self):
+        self.assertAlmostEqual(binomial_pmf(500, 0.5, 0), 2 ** -500, delta=1e-163)
+
+    def test_cdf_complement_preserves_tiny_upper_tail(self):
+        cdf, complement = binomial_cdf_and_complement(100, 0.5, 99)
+        self.assertEqual(cdf, 1.0)
+        self.assertLess(abs(complement / (2 ** -100) - 1), 1e-12)
+
+    def test_api_returns_accurate_cdf_complement(self):
+        response = app.test_client().post(
+            "/api/binomial", json={"n": 100, "p": 0.5, "k": 99}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json["cdf"], 1.0)
+        self.assertLess(abs(response.json["complement"] / (2 ** -100) - 1), 1e-12)
 
     def test_edge_probabilities(self):
         self.assertEqual(binomial_pmf(5, 0, 0), 1.0)

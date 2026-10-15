@@ -14,35 +14,46 @@ def poisson_pmf(rate: float, k: int) -> float:
 
 def poisson_cdf(rate: float, k: int) -> float:
     """Return P(X<=k) for X ~ Poisson(rate)."""
+    return poisson_cdf_and_complement(rate, k)[0]
+
+
+def poisson_cdf_and_complement(rate: float, k: int) -> tuple[float, float]:
+    """Return P(X<=k) and P(X>k), summing the smaller tail directly."""
     if rate < 0:
         raise ValueError("Rate must be non-negative.")
     if k < 0:
-        return 0.0
+        return 0.0, 1.0
     if rate == 0:
-        return 1.0
+        return 1.0, 0.0
 
     if k < rate:
         probability = poisson_pmf(rate, k)
+        lower_tail = [probability]
         total = probability
         current = k
         while current > 0:
             probability *= current / rate
+            lower_tail.append(probability)
             total += probability
             current -= 1
-            if probability <= total * 1e-15:
+            if probability <= total * 1e-16:
                 break
-        return min(1.0, total)
+        cdf = min(1.0, math.fsum(lower_tail))
+        return cdf, max(0.0, 1.0 - cdf)
 
     probability = poisson_pmf(rate, k + 1)
-    tail = probability
+    upper_tail = [probability]
+    total = probability
     current = k + 1
     while probability > 0:
         current += 1
         probability *= rate / current
-        tail += probability
-        if probability <= tail * 1e-15:
+        upper_tail.append(probability)
+        total += probability
+        if probability <= total * 1e-16:
             break
-    return max(0.0, min(1.0, 1.0 - tail))
+    complement = min(1.0, math.fsum(upper_tail))
+    return max(0.0, 1.0 - complement), complement
 
 
 def poisson_stats(rate: float) -> dict:

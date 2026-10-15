@@ -2,7 +2,12 @@ import math
 import unittest
 
 from app import app
-from distributions.poisson import poisson_cdf, poisson_pmf, poisson_stats
+from distributions.poisson import (
+    poisson_cdf,
+    poisson_cdf_and_complement,
+    poisson_pmf,
+    poisson_stats,
+)
 
 
 class PoissonTests(unittest.TestCase):
@@ -30,12 +35,21 @@ class PoissonTests(unittest.TestCase):
     def test_large_rate_cdf(self):
         self.assertAlmostEqual(poisson_cdf(1000, 1000), 0.5084093672, places=7)
 
+    def test_cdf_complement_preserves_tiny_upper_tail(self):
+        cdf, complement = poisson_cdf_and_complement(1, 20)
+        expected_complement = math.exp(-1) * sum(
+            1 / math.factorial(k) for k in range(21, 50)
+        )
+        self.assertEqual(cdf, 1.0)
+        self.assertAlmostEqual(complement, expected_complement, delta=1e-30)
+
     def test_poisson_page_and_api(self):
         client = app.test_client()
         self.assertEqual(client.get("/poisson").status_code, 200)
         response = client.post("/api/poisson", json={"lambda": 4, "k": 4})
         self.assertEqual(response.status_code, 200)
         self.assertAlmostEqual(response.json["pmf"], math.exp(-4) * 4 ** 4 / math.factorial(4))
+        self.assertAlmostEqual(response.json["cdf"] + response.json["complement"], 1.0)
         self.assertEqual(response.json["stats"]["mean"], 4)
         self.assertGreater(len(response.json["chart"]), 4)
 
